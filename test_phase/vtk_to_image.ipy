@@ -1,0 +1,59 @@
+# coding: utf-8
+import numpy as np
+import nibabel as nib
+from trimeshpy.io import load_mesh_from_file
+import trimeshpy.vtk_util as vtk_util
+rh_gray = load_mesh_from_file('rh.gray.7t.vtk')
+img = nib.load('../1001_2D_T2_0.25_MB4_S2_testIM.nii.gz')
+rh_gray_vox = vtk_util.vtk_to_vox?
+rh_gray_vox = vtk_util.vtk_to_vox(rh_gray.get_vertices(),img)
+rh_gray_vox[0]
+rh_gray_vox.astype?
+rh_gray_vox = vtk_util.vtk_to_vox(rh_gray.get_vertices(),img).astype(int)
+rh_gray_vox[0]
+rh_gray_vox.shape
+for i in range(len(rh_gray_vox)):
+    if i[2] > 80:
+        print(i)
+        
+i
+for i in range(len(rh_gray_vox)):
+    if rh_gray_vox[i,2] > 80:
+        print(i)
+        
+for i in range(len(rh_gray_vox)):
+    if rh_gray_vox[i,2] > 80:
+        print(rh_gray_vox[i])
+        
+vts_vox_image = np.zeros(img.shape)
+whos
+for i in range(len(rh_gray_vox)):
+    if rh_gray_vox[i,2] <= 80:
+        indices = (tuple([int(i[0]),int(i[1]),int(i[2])]))
+        vts_vox_image[indices] += 1
+        
+for i in range(len(rh_gray_vox)):
+    if rh_gray_vox[i,2] <= 80:
+        j = rh_gray_vox[i]
+        indices = (tuple([int(j[0]),int(j[1]),int(j[2])]))
+        vts_vox_image[indices] += 1
+        
+for i in range(len(rh_gray_vox)):
+    if rh_gray_vox[i,2] <= 79:
+        j = rh_gray_vox[i]
+        indices = (tuple([int(j[0]),int(j[1]),int(j[2])]))
+        vts_vox_image[indices] += 1
+        
+nib.save(nib.Nifti1Image(vts_vox_image,img.affine), 'rh_gray_7t_image.nii.gz')
+vts_vox_image[0]
+vts_vox_image[0]
+for i in range(len(rh_gray_vox)):
+    if rh_gray_vox[i,2] <= 79:
+        j = rh_gray_vox[i]
+        indices = (tuple([int(j[0]),int(j[1]),int(j[2])]))
+        print(indices)
+             
+img[608,727,62]
+img.get_data()[608,727,62]
+vts_vox_image = np.zeros(img.shape)
+history

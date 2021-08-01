@@ -1,0 +1,294 @@
+# coding: utf-8
+import vtk
+import nibabel as nib
+import numpy as np
+from vtk.util import numpy_support
+vtkreader = vtk.vtkPolyDataReader()
+vtkreader.SetInputConnection('rh.gray.7t.vtk')
+vtkreader.SetFileName('rh.gray.7t.vtk')
+vtkreader.Update()
+rh_gray_polydata_normal = vtk.vtkPolyDataNormals()
+rh_gray_polydata_normal.SetInputConnection(vtkreader.GetOutputPort())
+rh_gray_polydata_normal.ComputePointNormalsOn()
+rh_gray_polydata_normal.Update()
+rh_gray_pointdata = rh_gray_polydata_normal.GetOutput().GetPointData()
+rh_gray_polydata_normal.GetOutput().GetPoints()
+rh_gray_normals = rh_gray_pointdata.GetNormals()
+rh_gray_normals_np = numpy_support.vtk_to_numpy(rh_gray_normals)
+rh_gray_surface_np = numpy_support.vtk_to_numpy(rh_gray_polydata_normal.GetOutput().GetPoints())
+rh_gray_actual_points = rh_gray_polydata_normal.GetOutput().GetPoints()
+rh_gray_surface_np = numpy_support.vtk_to_numpy(rh_gray_actual_points.GetData())
+rh_gray_surface_np.shape
+rh_gray_normals_np.shape
+trk_list = []
+img = nib.load('../1001_2D_T2_0.25_MB4_S2_testIM.nii.gz')
+img.shape
+for i in range(len(rh_gray_normals_np)):
+    trk_list.append([rh_gray_surface_np[i],rh_gray_surface_np[i]+rh_gray_normals_np[i]])
+    
+trk_list[0]
+rh_gray_surface_np[0]
+rh_gray_normals_np[0]
+tractogram_out = nib.streamlines.tractogram.Tractogram( streamlines=trk_list,                 affine_to_rasmm=np.eye(4) )
+nib.streamlines.save(tractogram_out, 'rh_gray_tractogram.tck')
+trk_list = []
+for i in range(len(rh_gray_normals_np)):
+    trk_list.append([rh_gray_surface_np[i]+rh_gray_normals_np[i],rh_gray_surface_np[i]])
+    
+tractogram_out = nib.streamlines.tractogram.Tractogram( streamlines=trk_list,                 affine_to_rasmm=np.eye(4) )
+nib.streamlines.save(tractogram_out, 'rh_gray_tractogram.tck')
+from dipy.io.streamline import load_tractogram, save_tractogram
+sft = load_tractogram('rh_gray_tractogram.tck')
+sft = load_tractogram('rh_gray_tractogram.tck','../1001_2D_T2_0.25_MB4_S2_testIM.nii.gz')
+trk_list[0]
+trk_list = []
+for i in range(len(rh_gray_normals_np)):
+    trk_list.append([rh_gray_surface_np[i],rh_gray_surface_np[i]+rh_gray_normals_np[i]])
+    
+tractogram_out = nib.streamlines.tractogram.Tractogram( streamlines=trk_list,                 affine_to_rasmm=np.eye(4) )
+nib.streamlines.save(tractogram_out, 'rh_gray_tractogram.tck')
+trk_inv = np.linalg.inv(trk_list)
+trk_list.shape
+trk_list
+type(trk_list)
+len(trk_list)
+trk_list[0]
+sft = load_tractogram('rh_gray_tractogram.tck','../1001_2D_T2_0.25_MB4_S2_testIM.nii.gz')
+rh_gray_normals_np[0]
+rh_gray_surface_np[0]
+np.linalg.inv(rh_gray_surface_np)[0]
+rh_gray_surface_np[0:10]
+rh_gray_surface_np[1000:1020]
+type(rh_gray_surface_np)
+np.linalg.inv(rh_gray_surface_np[0])
+rh_gray_surface_np[0]
+type(rh_gray_surface_np[0])
+rh_gray_surface_np[0][0:3]
+rh_gray_surface_np[0][0]
+rh_gray_surface_np[0][1]
+np.linalg.inv(rh_gray_surface_np[0][1])
+rh_gray_surface_inv = rh_gray_surface_np * -1
+rh_gray_surface_inv[0]
+trk_list[0]
+trk_list = []
+for i in range(len(rh_gray_normals_np)):
+    trk_list.append([rh_gray_surface_inv[i],rh_gray_surface_inv[i]+rh_gray_normals_np[i]])
+    
+tractogram_out = nib.streamlines.tractogram.Tractogram( streamlines=trk_list,                 affine_to_rasmm=np.eye(4) )
+nib.streamlines.save(tractogram_out, 'rh_gray_tractogram.tck')
+trk_list = []
+for i in range(len(rh_gray_normals_np)):
+    trk_list.append([rh_gray_surface_np[i],rh_gray_surface_np[i]+rh_gray_normals_np[i]])
+    
+    
+trk_list[0]
+tractogram_out = nib.streamlines.tractogram.Tractogram( streamlines=trk_list,                 affine_to_rasmm=np.eye(4) )
+vtkwriter = vtk.vtkPolyDataWriter()
+vtkwriter.SetFileName('rh_gray_normals.vtk')
+vtkwriter.Write?
+vtkwriter.SetInputData(rh_gray_polydata_normal.GetOutput())
+vtkwriter.Write()
+vtkwriter.SetInputData(rh_gray_normals.GetData())
+vtkwriter.SetInputData(rh_gray_normals)
+history
+tractogram_out = nib.streamlines.tractogram.Tractogram( streamlines=trk_list,                 affine_to_rasmm=np.eye(4) )
+trk_list[0]
+tractogram_out = nib.streamlines.tractogram.Tractogram( streamlines=trk_list)
+nib.streamlines.save(tractogram_out, 'rh_gray_tractogram.tck')
+tractogram_out = nib.streamlines.tractogram.Tractogram( streamlines=trk_list,                 affine_to_rasmm=np.eye(4) )
+nib.streamlines.save(tractogram_out, 'rh_gray_tractogram.tck')
+load_tractogram??
+sft = load_tractogram('rh_gray_tractogram.tck','../1001_2D_T2_0.25_MB4_S2_testIM.nii.gz',to_space='SPACE.rasmm')
+load_tractogram?
+sft = load_tractogram('rh_gray_tractogram.tck','../1001_2D_T2_0.25_MB4_S2_testIM.nii.gz',to_space='rasmm')
+import dipy
+sft = load_tractogram('rh_gray_tractogram.tck','../1001_2D_T2_0.25_MB4_S2_testIM.nii.gz',to_space=dipy.io.stateful_tractogram.Space.RASMM)
+sft = load_tractogram('rh_gray_tractogram.tck','../1001_2D_T2_0.25_MB4_S2_testIM.nii.gz',to_space=dipy.io.stateful_tractogram.Space.VOXMM)
+sft = load_tractogram('rh_gray_tractogram.tck','../1001_2D_T2_0.25_MB4_S2_testIM.nii.gz',to_space=dipy.io.stateful_tractogram.Space.VOX)
+load_tractogram?
+sft = load_tractogram('rh_gray_tractogram.tck','../1001_2D_T2_0.25_MB4_S2_testIM.nii.gz',to_origin=dipy.io.stateful_tractogram.Origin.NIFTI)
+whos
+rh_gray_normals_np[0]
+rh_gray_surface_np[0]
+rh_gray_surface_np[1]
+img.affine
+new_points = np.dot(tractogram_out.streamlines._data, np.linalg.inv(img.affine)[0:3,0:3]) + np.linalg.inv(img.affine)[0:3,3]
+new_points[0]
+type(tractogram_out)
+tractogram_out = nib.streamlines.tractogram.Tractogram( streamlines=trk_list)
+tractogram_out.streamlines._data[0]
+tractogram_out = nib.streamlines.tractogram.Tractogram( streamlines=trk_list,                 affine_to_rasmm=np.eye(4) )
+tractogram_out.streamlines._data[0]
+tractogram_out.apply_affine(np.eye(4))
+tr_out = tractogram_out.apply_affine(np.eye(4))
+tr_out.streamlines._data[0]
+whos
+vtkreader.GetOutput().GetCenter()
+vtkreader.GetFileName()
+img = nib.load('../1001_2D_T2_0.25_MB4_S2_testIM.nii.gz')
+type(rh_gray_normals)
+trk_list
+trk_list.shape
+trk_list = []
+for i in range(len(rh_gray_normals_np)):
+    trk_list.append([rh_gray_surface_np[i],rh_gray_surface_np[i]+rh_gray_normals_np[i]])
+    
+    
+rh_gray_surface_np.shape
+rh_gray_normals_np.shape
+img = nib.load('../1001_2D_T2_0.25_MB4_S2_testIM.nii.gz')
+inv_img = np.linalg.inv(img.affine)
+flip = np.diag([-1,-1,1,1])
+vts = nib.affines.apply_affine(np.dot(inv_img, flip), rh_gray_normals)
+vts
+max(vts[:,2])
+max(vts[:,0])
+min(vts[:,0])
+min(vts[:,1])
+max(vts[:,1])
+max(vts[:,2])
+min(vts[:,2])
+nib.save?
+nib.save(vts,'rh_gray_normal.nii.gz')
+type(vts)
+nib.save(nib.Nifti1Image(vts,np.eye(4)),'rh_gray_normal_squished.nii.gz')
+vts.shape
+vts = nib.affines.apply_affine(np.dot(inv_img, flip), vtkreader.GetOutput())
+vts = nib.affines.apply_affine(np.dot(inv_img, flip), vtkreader.GetOutput().GetData())
+img.shape
+rh_gray_normals_np.shape
+rh_gray_normals_np[0]
+rh_gray_normal_surface = []
+for i in range(len(rh_gray_normals_np)):
+    rh_gray_normal_surface.append(rh_gray_surface_np[i]+rh_gray_normals_np[i])
+    
+    
+rh_gray_normal_surface.shape
+rh_gray_normal_surface[0]
+vts
+rh_gray_surface_np
+polydata = vtkreader.GetOutput()
+_points = polydata.GetPoints()
+_points_np = numpy_support.vtk_to_numpy(_points.GetData())
+_points_np.shape
+_points_np
+vts.shape
+img = nib.load('../1001_2D_T2_0.25_MB4_S2_testIM.nii.gz')
+inv_img = np.linalg.inv(img.affine)
+flip = np.diag([-1,-1,1,1])
+whos
+rh_gray_normals_np[0]
+rh_gray_normal_surface[0]
+rh_gray_surface_np
+rh_gray_surface_np[0]
+vts.shape
+dist = np.linalg.norm(rh_gray_normal_np[0]-rh_gray_surface_np[0])
+dist = np.linalg.norm(rh_gray_normals_np[0]-rh_gray_surface_np[0])
+dist
+rh_gray_normals_np[0]
+rh_gray_surface_np[0]
+dist2 = np.linalg.norm?
+np.sqrt(np.sum((rh_gray_normals_np[0]-rh_gray_surface_np[0]) ** 2))
+np.sqrt(np.sum((rh_gray_normal_surface[0]-rh_gray_surface_np[0]) ** 2))
+rh_gray_surface_np[0][0]
+new point = rh_gray_surface_np[0]
+rh_gray_surface_np[0]
+rh_gray_normal_surface.shape
+rh_gray_normals_np.shape
+rh_gray_normals_np[0]
+rh_gray_normal_surface[0]
+vts
+max(vts[:,0])
+min(vts[:,0])
+new_img = np.zeros(img.shape)
+for i in vts:
+    new_img[i[0],i[1],i[2]] += 1
+    
+new_img.shape
+for i in vts:
+    a = i
+   
+print(a)
+a[0]
+new_img[0,0,0]
+i
+for i in vts:
+    a = i
+    new_img[a[0],a[1],a[2]] += 1
+    
+a[0]
+vts_int = np.array(vts, dtype=np.int)
+vts_int = vts.astype(int)
+vts_int[0]
+for i in vts:
+    a = i
+    new_img[a[0],a[1],a[2]] += 1
+    
+for i in vts_int:
+    a = i
+    new_img[a[0],a[1],a[2]] += 1
+    
+new_img.shape
+nib.save(nib.Nifti1Image(new_img,np.eye(4)),'rh_gray_normal_squished.nii.gz')
+pwd
+new_img
+new_img.max()
+new point = rh_gray_surface_np[0]
+rh_gray_normal_surface[0]
+rh_gray_surface_np[0]
+type(rh_gray_surface_np)
+rh_gray_surface_np.shape
+type(rh_gray_normal_surface)
+new_points_in_axis = np.zeros(rh_gray_surface_np.shape)
+dist = np.linalg.norm(rh_gray_normals_np[0]-rh_gray_surface_np[0])
+dist
+dist = np.linalg.norm(rh_gray_normal_surface[0]-rh_gray_surface_np[0])
+dist
+for i in range(len(rh_gray_surface_np)):
+    new_points_in_axis[i] = [i[0]+dist,i[1],i[2]]
+    
+i
+len(rh_gray_surface_np)
+for i in rh_gray_surface_np:
+    a = i
+    
+a
+a[0]
+for i in rh_gray_surface_np:
+    new_points_in_axis.append([i[0]+dist,i[1],i[2]])
+    
+    
+new_points_in_axis = []
+for i in rh_gray_surface_np:
+    new_points_in_axis.append([i[0]+dist,i[1],i[2]])
+    
+    
+new_points[0]
+dist
+rh_gray_surface_np[0]
+rh_gray_surface_np[0]
+rh_gray_surface_np[0][1]
+rh_gray_surface_np[:,1][0]
+new_points_in_axis = rh_gray_surface_np
+new_points_in_axis[:,0][0]
+new_points_in_axis[:,0][0] = rh_gray_surface_np[:,0][0]+dist
+new_points_in_axis[0]
+rh_gray_normal_surface[0]
+normal_vector = rh_gray_normal_surface[0]-rh_gray_surface_np[0]
+normal_vector
+axis_vector = new_points_in_axis[0]-rh_gray_surface_np[0]
+np.dot(normal_vector,axis_vector)
+new_points_in_axis
+new_points_in_axis.shape
+type(new_points)
+dot_product = np.zeros(len(new_points_in_axis))
+dot_product.shape
+for i in range(len(new_points_in_axis)):
+    normal_vector = rh_gray_normal_surface[i]-rh_gray_surface_np[i]
+    axis_vector = new_points_in_axis[i]-rh_gray_surface_np[i]
+    dot_product[i] = np.dot(normal_vector,axis_vector)
+    
+dot_product
+max(dot_product)
+dot_product.sum
+dot_product.sum()
