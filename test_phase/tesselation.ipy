@@ -1,0 +1,99 @@
+# coding: utf-8
+import numpy as np
+import nibabel as nib
+from trimeshpy.io import load_mesh_from_file
+import trimeshpy.vtk_util as vtk_ut
+rh_gray = load_mesh_from_file('/mnt/d/Masi/3T_7T/7t_surf/rh.gray.7t.vtk')
+img = nib.load('/mnt/d/Masi/3T_7T/1001_2D_T2_0.25_MB4_S2_testIM.nii.gz')
+rh_gray.get_nb_triangles?
+rh_gray.get_nb_triangles()
+rh_vtk_reader = vtk.vtkPolyDataReader()
+import vtk
+rh_vtk_reader = vtk.vtkPolyDataReader()
+rh_vtk_reader.SetFileName('/mnt/d/Masi/3T_7T/7t_surf/rh.gray.7t.vtk')
+rh_vtk_reader.Update()
+tesselate = vtk.vtkTessellatorFilter()
+rh_gray_vox = vtk_ut.vtk_to_vox(rh_gray.get_nb_triangles(),img)
+tesselate.SetInputConnection(rh_vtk_reader.GetOutputPort())
+tesselate.Update()
+tesselated_data = tesselate.GetOutput()
+type(tesselated_data)
+a = tesselated_data.GetPoints()
+a
+from vtk.util import numpy_support
+points = numpy_support.vtk_to_numpy(a.GetData())
+points
+rh_vtk_reader.GetOutput().GetPoints()
+original_points = rh_vtk_reader.GetOutput().GetPoints()
+original_points = numpy_support.vtk_to_numpy(rh_vtk_reader.GetOutput().GetPoints().GetData())
+original_points
+original_points.shape
+points.shape
+subdivider = vtk.vtkAdaptiveSubdivisionFilter()
+subdivider.SetInputConnection(rh_vtk_reader.GetOutputPort())
+subdivider.SetMaximumEdgeLength(0.19)
+subdivider.Update()
+new_rh_gray = subdivider.GetOutput()
+np_tesselated = numpy_support.vtk_to_numpy(new_rh_gray.GetPoints().GetData())
+np_tesselated.shape
+import trimeshpy
+rh_gray = trimeshpy.io.load_mesh_with_vtk(new_rh_gray)
+type(rh_gray.get_vertices())
+rh_gray.get_vertices().shape
+rh_gray = vtk_ut.vtk_to_vox(tesselated_data, img).astype(int)
+tesselated_data[0]
+rh_gray = vtk_ut.vtk_to_vox(np_tesselated, img).astype(int)
+rh_gray[0]
+vts_vox_image = np.zeros(img.shape)
+for i in range(len(vts_vox_image)):
+    if vts_vox_image[i,2] <= 79:
+        j = vts_vox_image[i]
+        indices = (tuple([int(j[0]),int(j[1]),int(j[2])]))
+        vts_vox_image[indices] += 1
+        
+rh_gray[0]
+np.unique(rh_gray).shape
+np.unique(rh_gray)
+for i in range(len(vts_vox_image)):
+    if vts_vox_image[i,2] <= 79:
+        j = vts_vox_image[i]
+        print(j)
+        indices = (tuple([int(j[0]),int(j[1]),int(j[2])]))
+        vts_vox_image[indices] += 1
+        
+vts_vox_image.shape
+who
+whos
+new_rh_gray[0]
+rh_gray[0]
+rh_gray.shape
+rh_gray
+rh_gray[0]
+vts_vox_image = np.zeros(img.shape)
+for i in range(len(vts_vox_image)):
+    if rh_gray[i,2] <= 79:
+        j = rh_gray[i]
+        print(j)
+        indices = (tuple([int(j[0]),int(j[1]),int(j[2])]))
+        vts_vox_image[indices] += 1
+        
+vts_vox_image
+nib.save(nib.Nifti1Image(vts_vox_image,img.affine),'/mnt/d/Masi/3T_7T/7t_surf/rh_gray_7t_tesselated.nii.gz')
+max(vts_vox_image)
+vts_vox_image.max()
+vts_vox_image = np.zeros(img.shape)
+rh_gray[0,2]
+rh_gray[9827,2]
+for i in range(len(rh_gray)):
+    if rh_gray[i,2] > 79:
+        print(rh_gray[i])
+        
+for i in range(len(rh_gray)):
+    if rh_gray[i,2] <= 79:
+        j = rh_gray[i]
+        vts_vox_image[j[0],j[1],j[2]] += 100
+        
+img.shape
+img.get_fdata
+img.get_fdata().max()
+nib.save(nib.Nifti1Image(vts_vox_image,img.affine),'/mnt/d/Masi/3T_7T/7t_surf/rh_gray_7t_tesselated.nii.gz')
