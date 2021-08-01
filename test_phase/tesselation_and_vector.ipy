@@ -1,0 +1,217 @@
+import vtk
+import numpy as np
+import nibabel as nib
+import trimeshpy
+img = nib.load('/mnt/d/Masi/3T_7T/1001_2D_T2_0.25_MB4_S2_testIM.nii.gz')
+vtkreader = vtk.vtkPolyDataReader()
+vtkreader.SetFileName('/mnt/d/Masi/3T_7T/7t_surf/rh.gray.7t.vtk')
+vtkreader.Update()
+subdivider = vtk.vtkAdaptiveSubdivisionFilter()
+subdivider.SetInputConnection(vtkreader.GetOutputPort())
+subdivider.SetMaximumEdgeLength(0.19)
+subdivider.Update()
+normals = vtk.vtkPolyDataNormals()
+vtkwriter = vtk.vtkPolyDataWriter()
+vtkwriter.SetInputConnection(subdivider.GetOutputPort())
+vtkwriter.SetFileName('/mnt/d/Masi/3T_7T/7t_surf/rh.gray.tesselated.vtk')
+vtkwriter.Write()
+normal_polydata = vtk.vtkPolyDataNormals()
+del normals
+normal_polydata.SetInputConnection(vtkreader.GetOutputPort())
+normal_polydata.ComputePointNormalsOn()
+normal_polydata.Update()
+pointdata = normal_polydata.GetOutput().GetPointData()
+normals = pointdata.GetNormals()
+polydata = vtkreader.GetOutput()
+del normal_polydata
+del pointdata
+del normals
+del polydata
+normals = vtk.vtkPolyDataNormals()
+del normals
+normal_polydata = vtk.vtkPolyDataNormals()
+normal_polydata.SetInputConnection(subdivider.GetOutputPort())
+normal_polydata.ComputePointNormalsOn()
+normal_polydata.Update()
+pointdata = normal_polydata.GetOutput().GetPointData()
+normals = pointdata.GetNormals()
+points = subdivider.GetOutput().GetPoints()
+normals_np = vtk.util.numpy_support.vtk_to_numpy(normals)
+points_np = vtk.util.numpy_support.vtk_to_numpy(points.GetData())
+normals_np.shape
+points_np.shape
+del normal_polydata
+normal_polydata = vtk.vtkPolyDataNormals()
+normal_polydata.SetInputConnection(subdivider.GetOutputPort())
+normal_polydata.ComputeCellNormalsOn()
+normal_polydata.Update()
+pointdata = normal_polydata.GetOutput().GetPointData()
+normals = pointdata.GetNormals()
+normals_np = vtk.util.numpy_support.vtk_to_numpy(normals)
+normals_np.shape
+normals.GetNumberOfValues()
+normals.GetNumberOfComponents()
+normals.GetNumberOfTuples()
+pointdata.GetNumberOfTuples()
+pointdata.GetVectors?
+vectors = pointdata.GetVectors()
+type(vectors)
+out = normal_polydata.GetOutput()
+out.GetNumberOfPoints()
+normals_np = vtk.util.numpy_support.vtk_to_numpy(normals)
+points_np = vtk.util.numpy_support.vtk_to_numpy(out.GetPoints())
+points_np = vtk.util.numpy_support.vtk_to_numpy(out.GetPoints().GetData())
+normals_np.shape
+poitns_np.shape
+points_np.shape
+points_np[0]
+normals_np[0]
+%save -r normals_on_tessalated 1-68
+points_np[0]
+normals_np[0]
+normals_surface = points_np + normals_np
+normals_surface.shape
+normals_surface[0]
+del normals_surface
+normals_surface = points_np + normals_np + 1
+del normals_surface
+normals_surface = points_np + normals_np + 20
+normals_surface[0]
+del normals_surface
+normals_surface = points_np + (normals_np * 10)
+normals_surface[0]
+np.angle?
+np.arctan2?
+whos
+normal_polydata
+normals_np[:,1].max()
+normals_surface = (points_np + (normals_np * 10)).astype(int)
+whos
+normals_surface[0]
+points_np[0]
+normals_surface[10]
+points_np[10]
+import math
+math.atan2(normals_surface-points_np)
+math.atan2?
+math.atan?
+math.atanh?
+math.acos?
+math.acos(dot(normals_surface[0],points_np[0])/(|normals_surface[0]|.|points_np[0]|))
+whos
+normals_np[0]
+normals_surface[0]
+points_np[0]
+normals_surface1 = (points_np + normals_np ).astype(int)
+normals_surface1[0]
+normals_surface1 = points_np + normals_np
+normals_surface1[0]
+normals_surface[0]
+normals_surface.shape
+points_np.shape
+rh_gray_normals = trimeshpy.vtk_util.vtk_to_vox(normals_surface,img).astype(int)
+rh_gray_points = trimeshpy.vtk_util.vtk_to_vox(points_np,img).astype(int)
+normal_img = np.zeros(img.shape)
+points_img = np.zeros(img.shape)
+for i in range(len(points_np)):
+    if points_np[i,2] <= 79:
+        j_p = points_np[i]
+        j_n = normals_surface[i]
+        normal_img[j_n[0],j_n[1],j_n[2]] += 100
+        points_img[j_p[0],j_p[1],j_p[2]] += 100
+normals_surface[10]
+rh_gray_normals.shape
+rh_gray_normals[0]
+rh_gray_points[0]
+rh_gray_normals[0:10]
+rh_gray_normals[10:20]
+rh_gray_normals[30:40]
+rh_gray_normals[100:120]
+for i in rh_gray_normals:
+    if i[2] < 0:
+        print i
+for i in rh_gray_normals:
+    if i[2] < 0:
+        print(i)
+for i in rh_gray_normals:
+    if i[2] >= 0:
+        print(i)
+count = 0
+for i in rh_gray_normals:
+    if i[2] >= 0:
+        count++
+for i in rh_gray_normals:
+    if i[2] >= 0:
+        count +=1
+count
+rh_gray_normals.shape
+rh_gray_normals[0]
+normals_surface = (points_np + (normals_np * 2)).astype(int)
+rh_gray_normals = trimeshpy.vtk_util.vtk_to_vox(normals_surface,img).astype(int)
+rh_gray_normals[0]
+count = 0
+for i in rh_gray_normals:
+    if i[2] <= 0:
+        count += 1
+count
+count = 0
+i[2]
+i
+for i in rh_gray_normals:
+    if i[2] <= 0 and rh_gray_points[i,2] >=80:
+        count += 1
+rh_gray_points[1,2]
+for i in range(len(rh_gray_normals)):
+    if rh_gray_normals[i,2] <= 0 and rh_gray_points[i,2] >=80:
+        count += 1
+count
+for i in range(len(rh_gray_normals)):
+    if rh_gray_normals[i,2] <= 0
+        count += 1
+for i in range(len(rh_gray_normals)):
+    if rh_gray_normals[i,2] <= 0:
+        count += 1
+count
+normals_surface = (points_np + (normals_np * 1.2)).astype(int)
+count
+count = 0
+for i in range(len(rh_gray_normals)):
+    if rh_gray_normals[i,2] <= 0:
+        count += 1
+count
+rh_gray_normals = trimeshpy.vtk_util.vtk_to_vox(normals_surface,img).astype(int)
+count = 0
+for i in range(len(rh_gray_normals)):
+    if rh_gray_normals[i,2] <= 0:
+        count += 1
+count
+dist = np.linalg.norm?
+normals_surface = (points_np + (normals_np * 10)).astype(int)
+rh_gray_normals = trimeshpy.vtk_util.vtk_to_vox(normals_surface,img).astype(int)
+rh_gray_normals[1]
+rh_gray_points[1]
+np.linalg.norm(rh_gray_normals[1] - rh_gray_points[1])
+normal_vector = rh_gray_points[1] -rh_gray_normals[1]
+rh_gray_points[1]
+slice_vector = rh_gray_points
+slice_vector[1,2] = rh_gray_points[1,2]+np.linalg.norm(rh_gray_normals[1]-rh_gray_points[1])
+slice_vector[1]
+np.dot(normal_vector,slice_vector[1])
+slice_vector = rh_gray_points
+for i in range(len(rh_gray_points)):
+    dist = np.linalg.norm(rh_gray_points[i]-rh_gray_normals[i])
+    slice_vector[i,2] = rh_gray_points[i,2] + dist
+slice_vector[1]
+slice_vector[0]
+normal_vector[0]
+normal_vector
+del slice_vector
+del normal_vector
+normal_vector = rh_gray_points -rh_gray_normals
+normal_vector[0]
+rh_gray_points[0]
+rh_gray_normals[0]
+del normal_vector
+normal_vector = rh_gray_normals -rh_gray_points
+rh_gray_points[0]
+rh_gray_normals[0]
