@@ -45,3 +45,85 @@ for i in range(len(surface_vox)):
     y_normal_dot_product.append(np.dot(normal_vector_vox[i],y_vector[i]))
     z_normal_dot_product.append(np.dot(normal_vector_vox[i],z_vector[i]))
     
+x_normal_dot_product[0]
+y_normal_dot_product[0]
+z_normal_dot_product[0]
+count = 0 
+len(x_normal_dot_product)
+for i in x_normal_dot_product:
+    if i == 0.0:
+        count+=1
+        
+count
+x_normal_dot_product
+for i in y_normal_dot_product:
+    if i == 0.0:
+        count+=1
+        
+count
+for i in z_normal_dot_product:
+    if i == 0.0:
+        count+=1
+        
+count
+normal_vector_vox
+normal_unit_vector_vox = normals_vox - surface_vox / np.linalg.norm(normals_vox - surface_vox)
+normal_vector_vox = np.zeros(normals_vox.shape)
+for i in range(len(normal_vector_vox)):
+    normal_vector_vox[i] = (normals_vox[i] - surface_vox[i]) / np.linalg.norm(normals_vox[i]-surface_vox[i])
+    
+normal_vector_vox[0]
+x_normal_dot_product = []
+y_normal_dot_product = []
+z_normal_dot_product = []
+for i in range(len(normal_vector_vox)):
+    x_normal_dot_product.append(np.dot(normal_vector_vox[i],x_vector[i]))
+    y_normal_dot_product.append(np.dot(normal_vector_vox[i],y_vector[i]))
+    z_normal_dot_product.append(np.dot(normal_vector_vox[i],z_vector[i]))
+    
+for i in z_normal_dot_product:
+    if i == 0.0:
+        count+=1
+        
+count
+z_normal_dot_product
+y_normal_dot_product
+z_normal_dot_product
+max(z_normal_dot_product)
+max(y_normal_dot_product)
+max(x_normal_dot_product)
+for i in range(len(surface_vox)):
+    dist = np.linalg.norm(normals_vox[i] - surface_vox[i])
+    x_vector[i,0] += 1
+    y_vector[i,1] += 1
+    z_vector[i,2] += 1
+    
+    
+for i in range(len(surface_vox)):
+    dist = np.linalg.norm(normals_vox[i] - surface_vox[i])
+    x_vector[i,0] = 1
+    y_vector[i,1] = 1
+    z_vector[i,2] = 1
+    
+    
+x_normal_dot_product = []
+y_normal_dot_product = []
+z_normal_dot_product = []
+for i in range(len(normal_vector_vox)):
+    x_normal_dot_product.append(np.dot(normal_vector_vox[i],x_vector[i]))
+    y_normal_dot_product.append(np.dot(normal_vector_vox[i],y_vector[i]))
+    z_normal_dot_product.append(np.dot(normal_vector_vox[i],z_vector[i]))
+    
+max(x_normal_dot_product)
+min(x_normal_dot_product)
+max(y_normal_dot_product)
+min(y_normal_dot_product)
+max(z_normal_dot_product)
+min(z_normal_dot_product)
+for i in z_normal_dot_product:
+    if i == 0.0:
+        count+=1
+        
+count
+z_normal_dot_product
+get_ipython().run_line_magic('save', '-a /home/ramadak/git_repo/7T_cortical_thickness_project/tesselate_compute_normal_dot_product 39-83')
