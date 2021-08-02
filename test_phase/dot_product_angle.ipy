@@ -1,0 +1,94 @@
+# coding: utf-8
+import vtk
+import numpy as np
+import nibabel as nib
+import trimeshpy
+img = nib.load('1001_2D_T2_0.25_MB4_S2_testIM.nii.gz')
+vtkreader = vtk.vtkPolyDataReader()
+vtkreader.SetFileName('7t_surf/rh.gray.7t.vtk')
+vtkreader.Update()
+subdivider = vtk.vtkAdaptiveSubdivisionFilter()
+subdivider.SetInputConnection(vtkreader.GetOutputPort())
+subdivider.SetMaximumEdgeLength(0.19)
+subdivider.Update()
+normal_polydata = vtk.vtkPolyDataNormals()
+ normal_polydata.SetInputConnection(subdivider.GetOutputPort())
+ normal_polydata.ComputePointNormalsOn()
+ normal_polydata.Update()
+ pointdata = normal_polydata.GetOutput().GetPointData()
+ normals = pointdata.GetNormals()
+ points = normal_polydata.GetOutput().GetPoints()
+ points_np = vtk.util.numpy_support.vtk_to_numpy(points.GetData())
+ normals_np = vtk.util.numpy_support.vtk_to_numpy(normals)
+normal_polydata = vtk.vtkPolyDataNormals()
+normal_polydata.SetInputConnection(subdivider.GetOutputPort())
+normal_polydata.ComputePointNormalsOn()
+normal_polydata.Update()
+pointdata = normal_polydata.GetOutput().GetPointData()
+normals = pointdata.GetNormals()
+points = normal_polydata.GetOutput().GetPoints()
+points_np = vtk.util.numpy_support.vtk_to_numpy(points.GetData())
+normals_np = vtk.util.numpy_support.vtk_to_numpy(normals)
+normals_surface_np = points_np + normals_np
+normals_vox = trimeshpy.vtk_util.vtk_to_vox(normals_surface_np,img)
+surface_vox = trimeshpy.vtk_util.vtk_to_vox(points_np,img)
+normal_vector_vox = np.zeros(normals_vox.shape)
+for i in range(len(normal_vector_vox)):
+    normal_vector_vox[i] = (normals_vox[i] - surface_vox[i]) / np.linalg.norm(normals_vox[i]- surface_vox[i])
+    
+x_normal_dot_product = []
+y_normal_dot_product = []
+z_normal_dot_product = []
+del x_normal_dot_product,y_normal_dot_product,z_normal_dot_product
+x_normal_dot_product = []
+y_normal_dot_product = []
+z_normal_dot_product = []
+x_vector = np.zeros(surface_vox.shape)
+y_vector = np.zeros(surface_vox.shape)
+z_vector = np.zeros(surface_vox.shape)
+for i in range(len(surface_vox)):
+    x_vector[i,0] = 1
+    y_vector[i,1] = 1
+    z_vector[i,2] = 1
+    
+for i in range(len(normal_vector_vox)):
+    x_normal_dot_product.append(np.dot(normal_vector_vox[i],x_vector[i]))
+    y_normal_dot_product.append(np.dot(normal_vector_vox[i],y_vector[i]))
+    z_normal_dot_product.append(np.dot(normal_vector_vox[i],z_vector[i]))
+    
+max(x_normal_dot_product)
+min(x_normal_dot_product)
+y_normal_dot_product
+y_normal_dot_product[0]
+import math
+math.ceil((y_normal_dot_product[0]*1e5)/1e5)
+math.ceil((y_normal_dot_product[0]*1e-5)/1e-5)
+round(y_normal_dot_product[0],4)
+y_normal_dot_product
+whos
+new_rh_gray = subdivider.GetOutput()
+np_tesselated = numpy_support.vtk_to_numpy(new_rh_gray.GetPoints().GetData())
+new_rh_gray = subdivider.GetOutput()
+np_tesselated = vtk.util.numpy_support.vtk_to_numpy(new_rh_gray.GetPoints().GetData())
+vts_vox_image = np.zeros(img.shape)
+for i in range(len(rh_gray)):
+    if rh_gray[i,2] <= 79:
+        j = rh_gray[i]
+        vts_vox_image[j[0],j[1],j[2]] += 100
+        
+rh_gray = vtk_ut.vtk_to_vox(np_tesselated, img).astype(int)
+rh_gray = trimeshpy.vtk_util.vtk_to_vox(np_tesselated, img).astype(int)
+for i in range(len(rh_gray)):
+    if rh_gray[i,2] <= 79:
+        j = rh_gray[i]
+        vts_vox_image[j[0],j[1],j[2]] += 100
+        
+nib.save(nib.Nifti1Image(vts_vox_image,img.affine),'7t_surf/tesselated_rh_gray.nii.gz')
+whos
+whos
+x_normal_dot_product[0]
+max(x_normal_dot_product)
+min(x_normal_dot_product)
+math.acos(x_normal_dot_product[0])
+math.acos(x_normal_dot_product[0]) * 180 /math.pi
+x_normal_dot_product
