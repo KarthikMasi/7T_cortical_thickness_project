@@ -66,6 +66,19 @@ def compute_dot_product_with_z(normal_vector):
         z_normal_angles = (math.acos(np.dot(normal_vector[i],z_vector[i])))/ 180 * math.pi
     return z_normal_angles
 
+def make_image_with_angles(points,dot_product_angles,out,img):
+    """
+    Writes a nii file with the value range governed by the dot product angles
+    """
+    angled_image = np.zeros(img.shape)
+    points_int = points.astype(int)
+    for i in range(len(points)):
+        if points_int[i,2] <= 79:
+            indices = points_int[i]
+            angled_image[indices[0],indices[1],indices[2]] += dot_product_angles[i]
+    nib.save(nib.Nift1Image(angled_image,img.affine),out)
+
+
 def extract(args):
     """
     Main code block
@@ -75,6 +88,7 @@ def extract(args):
     normals, points = compute_normal(surf)
     normal_vector = make_vox_normal_vector(normals,points,img)
     dot_product_angles = compute_dot_product_with_z(normal_vector)
+    make_image_with_angles(points,dot_product_angles,args.out,img)
 
 
 def add_to_parser():
@@ -86,6 +100,8 @@ def add_to_parser():
                         help="Path of 7T SWI image to register")
     parser.add_argument("--surface",dest=surf_fn,default=None,required=True,\
                         help="Path of surface registered to 7T space")
+    parser.add_argument("--out",dest=out,default=None,required=True,\
+                        help="filename of image to be created with heatmap of angles")
     return parser
 
 if __name__== '__main__':
