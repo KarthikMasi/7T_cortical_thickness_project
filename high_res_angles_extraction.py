@@ -96,11 +96,11 @@ def add_to_parser():
     Arguments reader
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument("--img",dest=img_fn, default=None,required=True, \
+    parser.add_argument("--img",dest='img_fn', default=None,required=True, \
                         help="Path of 7T SWI image to register")
-    parser.add_argument("--surface",dest=surf_fn,default=None,required=True,\
+    parser.add_argument("--surface",dest='surf_fn',default=None,required=True,\
                         help="Path of surface registered to 7T space")
-    parser.add_argument("--out",dest=out,default=None,required=True,\
+    parser.add_argument("--out",dest='out',default=None,required=True,\
                         help="filename of image to be created with heatmap of angles")
     return parser
 
