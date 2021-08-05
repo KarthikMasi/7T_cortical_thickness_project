@@ -24,7 +24,7 @@ def tesselate_surface(surf,img):
     """
     subdivider = vtk.vtkAdaptiveSubdivisionFilter()
     subdivider.SetInputConnection(surf.GetOutputPort())
-    subdivider.SetMaximumEdgeLength(min(img.header.get_zooms()-0.01))
+    subdivider.SetMaximumEdgeLength(min(img.header.get_zooms())-0.01)
     subdivider.Update()
     return subdivider
 
@@ -58,7 +58,7 @@ def make_vox_normal_vector(normals,points,img):
     return normal_vector_vox
 
 def compute_dot_product_with_z(normal_vector):
-    z_vector = np.zeros(surface_vox.shape)
+    z_vector = np.zeros(normal_vector.shape)
     for i in range(len(normal_vector)):
         z_vector[i,2]=1
     z_normal_angles = np.zeros(len(normal_vector))
