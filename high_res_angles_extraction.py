@@ -28,13 +28,28 @@ def tesseltate_surface(surf,img):
     subdivider.Update()
     return subdivider
 
+def compute_normal(surf):
+    """
+    Computes normal of vtk polydata and returns the normals and surface points as np array
+    """
+    normal_polydata = vtk.vtkPolyDataNormals()
+    normal_polydata.SetInputConnection(surf.GetOutputPort())
+    normal_polydata.ComputePointNormalsOn()
+    normal_polydata.Update()
+    pointdata = normal_polydata.GetOutput().GetPointData()
+    normals = pointdata.GetNormals()
+    points = normal_polydata.GetOutput().GetPoints()
+    normals_np = vtk.util.numpy_support.vtk_to_numpy(normals)
+    points_np = vtk.util.numpy_support.vtk_to_numpy(points.GetData())
+    return normals_np,points_np
+
 def extract(args):
     """
     Main code block
     """
     img, surf = load_img_n_surface(args.img_fn,args.surf_fn)
     tesselated_surf = tesselate_surface(surf,img)
-
+    normals, points = compute_normal(surf)
 
 def add_to_parser():
     """
