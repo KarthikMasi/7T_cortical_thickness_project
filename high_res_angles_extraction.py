@@ -18,7 +18,7 @@ def load_img_n_surface(img_fn,surf_fn):
     vtkreader.Update()
     return img, vtkreader
 
-def tesseltate_surface(surf,img):
+def tesselate_surface(surf,img):
     """
     Tesselates surface such that maximum edge length is < least img voxel resolution side
     """
@@ -85,7 +85,7 @@ def extract(args):
     """
     img, surf = load_img_n_surface(args.img_fn,args.surf_fn)
     tesselated_surf = tesselate_surface(surf,img)
-    normals, points = compute_normal(surf)
+    normals, points = compute_normal(tesselated_surf)
     normal_vector = make_vox_normal_vector(normals,points,img)
     dot_product_angles = compute_dot_product_with_z(normal_vector)
     make_image_with_angles(points,dot_product_angles,args.out,img)
