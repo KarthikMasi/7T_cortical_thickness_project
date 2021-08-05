@@ -57,6 +57,14 @@ def make_vox_normal_vector(normals,points,img):
           (normals_vox[i] - surface_vox[i])/np.linalg.norm(normals_vox[i]- surface_vox[i])
     return normal_vector_vox
 
+def compute_dot_product_with_z(normal_vector):
+    z_vector = np.zeros(surface_vox.shape)
+    for i in range(len(normal_vector)):
+        z_vector[i,2]=1
+    z_normal_angles = np.zeros(len(normal_vector))
+    for i in range(len(normal_vector)):
+        z_normal_angles = (math.acos(np.dot(normal_vector[i],z_vector[i])))/ 180 * math.pi
+    return z_normal_angles
 
 def extract(args):
     """
