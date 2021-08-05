@@ -12,7 +12,7 @@ def load_img_n_surface(img_fn,surf_fn):
     """
     Loads the image with nibabel. Loads the surface with vtkPolyDataReader
     """
-    print("Loading img and vtk object")
+    print("Loading img and vtk object...")
     img = nib.load(img_fn)
     vtkreader = vtk.vtkPolyDataReader()
     vtkreader.SetFileName(surf_fn)
@@ -52,16 +52,13 @@ def make_vox_normal_vector(normals,points,img):
     """
     Converts vtk format coordinates(mm) to voxel space and returns unit normal vectors
     """
-    print("Making unit normal vector with normal and surface points")
+    print("Making unit normal vector with normal and surface points...")
     normals_surface_np = points + normals
     normals_vox = trimeshpy.vtk_util.vtk_to_vox(normals_surface_np,img)
     surface_vox = trimeshpy.vtk_util.vtk_to_vox(points,img)
-    print(normals_vox[0])
-    print(surface_vox[0])
     normal_vector_vox = np.zeros(normals_vox.shape)
     for i in range(len(normal_vector_vox)):
-        normal_vector_vox[i] = \
-          (normals_vox[i] - surface_vox[i])/np.linalg.norm(normals_vox[i]- surface_vox[i])
+        normal_vector_vox[i] = (normals_vox[i] - surface_vox[i])/np.linalg.norm(normals_vox[i] - surface_vox[i])
     np.savetxt('/home/local/VANDERBILT/ramadak/3T_7T/z_vector_normal.txt',normal_vector_vox[:,2])
     return normal_vector_vox
 
@@ -75,9 +72,7 @@ def compute_dot_product_with_z(normal_vector):
         z_vector[i,2]=1
     z_normal_angles = np.zeros(len(normal_vector))
     for i in range(len(normal_vector)):
-        z_normal_angles[i] = math.acos(np.dot(normal_vector[i],z_vector[i]))/ 180 * math.pi
-    print(normal_vector[0])
-    print(z_normal_angles.max())
+        z_normal_angles[i] = math.acos(np.dot(normal_vector[i],z_vector[i])) * 180 / math.pi
     np.savetxt('/home/local/VANDERBILT/ramadak/3T_7T/angles.txt',z_normal_angles)
     return z_normal_angles
 
@@ -87,13 +82,18 @@ def make_image_with_angles(points,dot_product_angles,out,img):
     """
     print("Writing to image...")
     angled_image = np.zeros(img.shape)
-    points_int = points.astype(int)
+    dot_product_normalized = np.zeros(dot_product_angles.shape)
+    for i in range(len(dot_product_angles)):
+        if dot_product_angles[i] <= 90.0:
+            dot_product_normalized[i] = dot_product_angles[i]
+        else:
+            dot_product_normalized[i] = 180 - dot_product_angles[i]
     for i in range(len(points)):
-        if points_int[i,2] <= 79:
-            indices = points_int[i]
-            angled_image[indices[0],indices[1],indices[2]] += dot_product_angles[i]
+        if points[i,2] <= 79:
+            j = points[i].astype(int)
+            indices = (tuple([int(j[0]),int(j[1]),int(j[2])]))
+            angled_image[indices] = dot_product_normalized[i]
     nib.save(nib.Nifti1Image(angled_image,img.affine),out)
-    print("Complete....")
 
 def extract(args):
     """
@@ -105,7 +105,6 @@ def extract(args):
     normal_vector = make_vox_normal_vector(normals,points,img)
     dot_product_angles = compute_dot_product_with_z(normal_vector)
     make_image_with_angles(points,dot_product_angles,args.out,img)
-
 
 def add_to_parser():
     """
