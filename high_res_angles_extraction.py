@@ -18,11 +18,22 @@ def load_img_n_surface(img_fn,surf_fn):
     vtkreader.Update()
     return img, vtkreader
 
+def tesseltate_surface(surf,img):
+    """
+    Tesselates surface such that maximum edge length is < least img voxel resolution side
+    """
+    subdivider = vtk.vtkAdaptiveSubdivisionFilter()
+    subdivider.SetInputConnection(surf.GetOutputPort())
+    subdivider.SetMaximumEdgeLength(min(img.header.get_zooms()-0.01))
+    subdivider.Update()
+    return subdivider
+
 def extract(args):
     """
     Main code block
     """
     img, surf = load_img_n_surface(args.img_fn,args.surf_fn)
+    tesselated_surf = tesselate_surface(surf,img)
 
 
 def add_to_parser():
