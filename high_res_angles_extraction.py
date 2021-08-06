@@ -48,7 +48,7 @@ def compute_normal(surf):
     print("Normals ready in numpy format...")
     return normals_np,points_np
 
-def make_vox_normal_vector(normals,points,img):
+def make_vox_normal_vector(normals,points,img,z_fn):
     """
     Converts vtk format coordinates(mm) to voxel space and returns unit normal vectors
     """
@@ -59,7 +59,7 @@ def make_vox_normal_vector(normals,points,img):
     normal_vector_vox = np.zeros(normals_vox.shape)
     for i in range(len(normal_vector_vox)):
         normal_vector_vox[i] = (normals_vox[i] - surface_vox[i])/np.linalg.norm(normals_vox[i] - surface_vox[i])
-    np.savetxt('/home/local/VANDERBILT/ramadak/3T_7T/z_vector_normal.txt',normal_vector_vox[:,2])
+    np.savetxt(z_fn,normal_vector_vox[:,2])
     return normals_vox,surface_vox,normal_vector_vox
 
 def compute_dot_product_with_z(normal_vector):
@@ -73,10 +73,9 @@ def compute_dot_product_with_z(normal_vector):
     z_normal_angles = np.zeros(len(normal_vector))
     for i in range(len(normal_vector)):
         z_normal_angles[i] = math.acos(np.dot(normal_vector[i],z_vector[i])) * 180 / math.pi
-    np.savetxt('/home/local/VANDERBILT/ramadak/3T_7T/angles.txt',z_normal_angles)
     return z_normal_angles
 
-def make_image_with_angles(surface_vox,dot_product_angles,out,img):
+def make_image_with_angles(surface_vox,dot_product_angles,out,img,angles):
     """
     Writes a nii file with the value range governed by the dot product angles
     """
@@ -88,6 +87,8 @@ def make_image_with_angles(surface_vox,dot_product_angles,out,img):
             dot_product_normalized[i] = dot_product_angles[i]
         else:
             dot_product_normalized[i] = 180 - dot_product_angles[i]
+
+    np.savetxt(angles,dot_product_normalized)
     for i in range(len(surface_vox)):
         if surface_vox[i,2] <= 79:
             j = surface_vox[i].astype(int)
@@ -102,9 +103,9 @@ def extract(args):
     img, surf = load_img_n_surface(args.img_fn,args.surf_fn)
     tesselated_surf = tesselate_surface(surf,img)
     normals, points = compute_normal(tesselated_surf)
-    normal_voxels,surface_voxels,normal_vector = make_vox_normal_vector(normals,points,img)
+    normal_voxels,surface_voxels,normal_vector = make_vox_normal_vector(normals,points,img,args.z_dist)
     dot_product_angles = compute_dot_product_with_z(normal_vector)
-    make_image_with_angles(surface_voxels,dot_product_angles,args.out,img)
+    make_image_with_angles(surface_voxels,dot_product_angles,args.out,img,args.angles)
 
 def add_to_parser():
     """
@@ -117,6 +118,10 @@ def add_to_parser():
                         help="Path of surface registered to 7T space")
     parser.add_argument("--out",dest='out',default=None,required=True,\
                         help="filename of image to be created with heatmap of angles")
+    parser.add_argument("--angle_np",dest='angles',default=None,required=True,\
+                        help="filename to write numpy array of normal angles with z vector to txt")
+    parser.add_argument("--z",dest="z_dist",default=None,required=True,\
+                        help="filename to write numpy array of z distance coordinates to txt")
     return parser
 
 if __name__== '__main__':
