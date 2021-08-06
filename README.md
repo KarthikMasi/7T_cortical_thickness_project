@@ -1,5 +1,5 @@
 # 7T_cortical_thickness_project
-
+```
 usage: high_res_angles_extraction.py [-h] --img IMG_FN --surface SURF_FN --out
                                      OUT --angle_np ANGLES --z Z_DIST
 
@@ -12,3 +12,4 @@ optional arguments:
                      vector to txt
   --z Z_DIST         filename to write numpy array of z distance coordinates
                      to txt
+```
