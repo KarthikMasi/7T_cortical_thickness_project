@@ -25,7 +25,7 @@ scil_apply_transform_to_surface.py flipped.vtk tranform.txt flipped.3t.vtk
 ```
 
 
-###ipython live code:
+### ipython code(to be moved to standalone code):
 ```
 import ants 
 
