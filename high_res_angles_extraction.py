@@ -60,7 +60,7 @@ def make_vox_normal_vector(normals,points,img):
     for i in range(len(normal_vector_vox)):
         normal_vector_vox[i] = (normals_vox[i] - surface_vox[i])/np.linalg.norm(normals_vox[i] - surface_vox[i])
     np.savetxt('/home/local/VANDERBILT/ramadak/3T_7T/z_vector_normal.txt',normal_vector_vox[:,2])
-    return normal_vector_vox
+    return normals_vox,surface_vox,normal_vector_vox
 
 def compute_dot_product_with_z(normal_vector):
     """
@@ -76,7 +76,7 @@ def compute_dot_product_with_z(normal_vector):
     np.savetxt('/home/local/VANDERBILT/ramadak/3T_7T/angles.txt',z_normal_angles)
     return z_normal_angles
 
-def make_image_with_angles(points,dot_product_angles,out,img):
+def make_image_with_angles(surface_vox,dot_product_angles,out,img):
     """
     Writes a nii file with the value range governed by the dot product angles
     """
@@ -88,9 +88,9 @@ def make_image_with_angles(points,dot_product_angles,out,img):
             dot_product_normalized[i] = dot_product_angles[i]
         else:
             dot_product_normalized[i] = 180 - dot_product_angles[i]
-    for i in range(len(points)):
-        if points[i,2] <= 79:
-            j = points[i].astype(int)
+    for i in range(len(surface_vox)):
+        if surface_vox[i,2] <= 79:
+            j = surface_vox[i].astype(int)
             indices = (tuple([int(j[0]),int(j[1]),int(j[2])]))
             angled_image[indices] = dot_product_normalized[i]
     nib.save(nib.Nifti1Image(angled_image,img.affine),out)
@@ -102,9 +102,9 @@ def extract(args):
     img, surf = load_img_n_surface(args.img_fn,args.surf_fn)
     tesselated_surf = tesselate_surface(surf,img)
     normals, points = compute_normal(tesselated_surf)
-    normal_vector = make_vox_normal_vector(normals,points,img)
+    normal_voxels,surface_voxels,normal_vector = make_vox_normal_vector(normals,points,img)
     dot_product_angles = compute_dot_product_with_z(normal_vector)
-    make_image_with_angles(points,dot_product_angles,args.out,img)
+    make_image_with_angles(surface_voxels,dot_product_angles,args.out,img)
 
 def add_to_parser():
     """
