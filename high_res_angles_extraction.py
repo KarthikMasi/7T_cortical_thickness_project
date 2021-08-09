@@ -54,13 +54,13 @@ def make_vox_normal_vector(normals,points,img,z_fn):
     """
     print("Making unit normal vector with normal and surface points...")
     normals_surface_np = points + normals
-    normals_vox = trimeshpy.vtk_util.vtk_to_vox(normals_surface_np,img)
-    surface_vox = trimeshpy.vtk_util.vtk_to_vox(points,img)
-    normal_vector_vox = np.zeros(normals_vox.shape)
-    for i in range(len(normal_vector_vox)):
-        normal_vector_vox[i] = (normals_vox[i] - surface_vox[i])/np.linalg.norm(normals_vox[i] - surface_vox[i])
+    #normals_vox = trimeshpy.vtk_util.vtk_to_vox(normals_surface_np,img)
+    #surface_vox = trimeshpy.vtk_util.vtk_to_vox(points,img)
+    normal_vector_vox = np.zeros(normals.shape)
+    for i in range(len(normals)):
+        normal_vector_vox[i] = (normals[i])/np.linalg.norm(normals[i])
     np.savetxt(z_fn,normal_vector_vox[:,2])
-    return normals_vox,surface_vox,normal_vector_vox
+    return normals,points,normal_vector_vox
 
 def compute_dot_product_with_z(normal_vector):
     """
@@ -75,7 +75,7 @@ def compute_dot_product_with_z(normal_vector):
         z_normal_angles[i] = math.acos(np.dot(normal_vector[i],z_vector[i])) * 180 / math.pi
     return z_normal_angles
 
-def make_image_with_angles(surface_vox,dot_product_angles,out,img,angles):
+def make_image_with_angles(points,dot_product_angles,out,img,angles):
     """
     Writes a nii file with the value range governed by the dot product angles
     """
@@ -87,7 +87,7 @@ def make_image_with_angles(surface_vox,dot_product_angles,out,img,angles):
             dot_product_normalized[i] = dot_product_angles[i]
         else:
             dot_product_normalized[i] = 180 - dot_product_angles[i]
-
+    surface_vox = trimeshpy.vtk_util.vtk_to_vox(points,img)
     np.savetxt(angles,dot_product_normalized)
     for i in range(len(surface_vox)):
         if surface_vox[i,2] <= 79:
